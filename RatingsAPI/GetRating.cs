@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.Azure.Cosmos;
 
 namespace Company.Function
 {
@@ -19,7 +20,7 @@ namespace Company.Function
         [CosmosDB(
             databaseName: "BFYOC",
             collectionName: "Data-Container",
-            ConnectionStringSetting = "AccountEndpoint=https://serverless-openhack-team5-cosmosdb.documents.azure.com:443/;AccountKey=YoBSwM8z0O1kl5o0HZFn6xj4PDfQe6AwmOeOQ1BdmPbSFDA9qKK8WkaoHZDlzJxKAYANgFD1Ovv8gxinbAXzDQ==")]IAsyncCollector<dynamic> documentsOut,
+            ConnectionStringSetting = "CosmosDBConnection")]IAsyncCollector<dynamic> documentsOut,
         ILogger log)
 
         {
