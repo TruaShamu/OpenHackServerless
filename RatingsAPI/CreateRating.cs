@@ -11,14 +11,13 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using OpenHackServerless.RatingsAPI.Model;
+
 
 namespace OpenHackServerless.RatingsAPI
 {
     public static class CreateRating
     {
-        private const string V = "AccountEndpoint=https://serverless-openhack-team5-cosmosdb.documents.azure.com:443/; AccountKey=YoBSwM8z0O1kl5o0HZFn6xj4PDfQe6AwmOeOQ1BdmPbSFDA9qKK8WkaoHZDlzJxKAYANgFD1Ovv8gxinbAXzDQ==";
-
+        
         [FunctionName("CreateRating")]
         /*public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
