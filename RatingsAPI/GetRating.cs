@@ -13,23 +13,20 @@ namespace Company.Function
     public static class GetRating
     {
         [FunctionName("GetRating")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+
+    public static async Task<IActionResult> Run(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+        [CosmosDB(
+            databaseName: "BFYOC",
+            collectionName: "Data-Container",
+            ConnectionStringSetting = "AccountEndpoint=https://serverless-openhack-team5-cosmosdb.documents.azure.com:443/;AccountKey=YoBSwM8z0O1kl5o0HZFn6xj4PDfQe6AwmOeOQ1BdmPbSFDA9qKK8WkaoHZDlzJxKAYANgFD1Ovv8gxinbAXzDQ==")]IAsyncCollector<dynamic> documentsOut,
+        ILogger log)
+
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
-
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
+        return new NotFoundObjectResult("Rating");
+ 
         }
     }
 }
