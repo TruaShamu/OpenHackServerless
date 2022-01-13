@@ -28,15 +28,6 @@ namespace Company.Function
             ILogger log)
 
         {
-            // string requestBody = await new StreamReader(request.Body).ReadToEndAsync();
-            // dynamic data = JsonConvert.DeserializeObject(requestBody);
-
-            // if (string.IsNullOrEmpty(data)) {
-            //     return new NotFoundObjectResult("RatingId Broken");
-            // } else {
-            //     return new OkObjectResult(requestBody);
-            // }
-
             int ratNum = ratings.Count();
             if (ratNum == 0) {
                 return new NotFoundObjectResult("RatingId Broken");
