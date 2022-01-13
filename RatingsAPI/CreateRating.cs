@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-
+using OpenHackServerless.RatingsAPI.Model;
 
 namespace OpenHackServerless.RatingsAPI
 {
@@ -45,24 +45,41 @@ namespace OpenHackServerless.RatingsAPI
             DateTime currentTime = DateTime.Now;
             rating = data?.rating;
 
-            /*var ratingResponse = new RatingModel {
-                ID=guid,
-                UserId=userId,
-                ProductId=productId,
-                userNotes=userNotes,
-                Timestamp=currentTime,
-                locationName=locationName,
-                Rating=rating
-            };*/
+ 
+           RatingModel ratingModel = new RatingModel();
+           ratingModel.guid=guid;
+           ratingModel.location=locationName;
+           ratingModel.productId=productId;
+           ratingModel.rating=rating;
+           ratingModel.timeStamp=currentTime;
+           ratingModel.userNotes=userNotes;
+           ratingModel.userId=userId;
 
 
             //Database Connection
+             if (!string.IsNullOrEmpty(userId))
+             {
+                // Add a JSON document to the output container.
+                log.LogInformation("Inside DB transaction");
+                await documentsOut.AddAsync(new
+                {
+                    id = ratingModel.guid,
+                    location= ratingModel.location,
+                    productId = ratingModel.productId,
+                    userId = ratingModel.userId,
+                    userNotes = ratingModel.userNotes,
+                    rating = ratingModel.rating,
+                    timestamp=ratingModel.timeStamp
+                });
+                log.LogInformation("Database insert completed successfully");
+            }
 
+            //Response
             string responseMessage = string.IsNullOrEmpty(productId)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, Rating for {productId} submitted successfully.";
-
-            return new OkObjectResult(responseMessage);
+            log.LogInformation(responseMessage);
+            return new OkObjectResult(ratingModel);
         }
     }
 
