@@ -7,6 +7,10 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.Azure.Cosmos;
+using System.Collections.Generic;
+using System.Linq;
+
 
 namespace Company.Function
 {
@@ -14,22 +18,21 @@ namespace Company.Function
     {
         [FunctionName("GetRatings")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "getRatings/{UserId}")] HttpRequest request,
+            [CosmosDB( databaseName: "BFYOC",
+            collectionName: "Data-Container",
+            ConnectionStringSetting = "CosmosDBConnection",
+            SqlQuery = "select * from BFYOC r where r.UserId = {UserId}")]
+                IEnumerable<Rating> ratings,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            int ratNum = ratings.Count();
+            if (ratNum == 0) {
+                return new NotFoundObjectResult("RatingId Broken");
+            }
 
-            string name = req.Query["name"];
-
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
+            //Idk what I'm doing bro
+            return new OkObjectResult(ratings);
         }
     }
 }
